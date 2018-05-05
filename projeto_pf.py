@@ -33,14 +33,28 @@ movimentos_longos = [[-10, -10, 0], [-10, 10, 0], [-10,0,0], [-10, 0, 0],
               [0,10,0], [0,10,0], [0,10,0],[0,10,0],
               [0,0,-math.radians(90)],
               [math.cos(math.pi/3)*10, math.sin(math.pi/3),0],[math.cos(math.pi/3)*10, math.sin(math.pi/3),0],[math.cos(math.pi/3)*10, math.sin(math.pi/3),0],
-              [math.cos(math.pi/3)*10, math.sin(math.pi/3),0]
-              
-              ]
+              [math.cos(math.pi/3)*10, math.sin(math.pi/3),0]]
 
 # Lista curta
 movimentos_curtos = [[-10, -10, 0], [-10, 10, 0], [-10,0,0], [-10, 0, 0]]
 
-movimentos = movimentos_curtos
+movimentos_relativos = [[0, -math.pi/3],[10, 0],[10, 0], [10, 0], [10, 0],[15, 0],[15, 0],[15, 0],[0, -math.pi/2],[10, 0],
+                       [10,0], [10, 0], [10, 0], [10, 0], [10, 0], [10, 0],
+                       [10,0], [10, 0], [10, 0], [10, 0], [10, 0], [10, 0],
+                       [10,0], [10, 0], [10, 0], [10, 0], [10, 0], [10, 0],
+                       [0, -math.pi/2], 
+                       [10,0], [10, 0], [10, 0], [10, 0], [10, 0], [10, 0],
+                       [10,0], [10, 0], [10, 0], [10, 0], [10, 0], [10, 0],
+                       [10,0], [10, 0], [10, 0], [10, 0], [10, 0], [10, 0],
+                       [10,0], [10, 0], [10, 0], [10, 0], [10, 0], [10, 0],
+                       [0, -math.pi/2], 
+                       [10,0], [0, -math.pi/4], [10,0], [10,0], [10,0],
+                       [10,0], [10, 0], [10, 0], [10, 0], [10, 0], [10, 0],
+                       [10,0], [10, 0], [10, 0], [10, 0], [10, 0], [10, 0]]
+
+
+
+movimentos = movimentos_relativos
 
 
 
@@ -48,18 +62,30 @@ def cria_particulas(minx=0, miny=0, maxx=largura, maxy=altura, n_particulas=num_
     """
         Cria uma lista de partículas distribuídas de forma uniforme entre minx, miny, maxx e maxy
     """
-    return create_particles(robot.pose())
+    particle_cloud = []
+    for i in range(n_particulas):
+        x = np.random.uniform(minx,maxx)
+        y = np.random.uniform(miny,maxy)
+        theta = np.random.uniform(0,2*math.pi)
+        p = Particle(x, y, theta) # A prob. w vai ser normalizada depois
+        particle_cloud.append(p)
+    return particle_cloud
     
 def move_particulas(particulas, movimento):
     """
-        Recebe um movimento na forma [x,y, theta]  e o aplica a todas as partículas
+        Recebe um movimento na forma [deslocamento, theta]  e o aplica a todas as partículas
         Assumindo um desvio padrão para cada um dos valores
         Esta função não precisa devolver nada, e sim alterar as partículas recebidas.
+        
+        Sugestão: aplicar move_relative(movimento) a cada partícula
         
         Você não precisa mover o robô. O código fornecido pelos professores fará isso
         
     """
-    return particulas
+    for parti in particulas:
+      movimento = [movimento[0]+np.random.normal(0,1.5),movimento[1]+np.random.normal(0,0.0523)]
+      parti.move_relative(movimento)
+
     
 def leituras_laser_evidencias(robot, particulas):
     """

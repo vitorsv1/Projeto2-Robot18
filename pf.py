@@ -49,12 +49,18 @@ class Particle(object):
         """
         return [self.x, self.y, self.theta]
     
+    def x_y(self):
+        """
+            Retorna apenas as componentes x, y da pose
+        """
+        return (self.x, self.y)
+    
 
     def pose_prob(self):
         """
             Retorna uma lista com x,y, theta, w da particula
         """
-        l = self.pose(self)
+        l = self.pose()
         l.append(self.w)
         return l
     
@@ -108,11 +114,29 @@ class Particle(object):
         self.x += movimento[0]
         self.y += movimento[1]
         self.theta += movimento[2]
-
-
-    
         
-
+    def move_linear(self, desl):
+        """
+            Realiza um deslocamento relativo de magnitude desl no sentido
+            Em que o robô está olhando
+        """
+        self.x = self.x + math.cos(self.theta)*desl
+        self.y = self.y + math.sin(self.theta)*desl # Edit- (-) sign for pygame
+        
+    def move_relative(self, speed):
+        """
+            speed[0] is a linear speed
+            speed[1] is an angular speed
+        """
+        self.move_angular(speed[1])        
+        self.move_linear(speed[0])
+        
+  
+    def move_angular(self, ang):
+        """
+            Realiza um deslocamento angular de magnitude ang
+        """
+        self.theta+=ang
 
 def create_particles(pose, var_x = 50, var_y = 50, var_theta = math.pi/3, num=10):
     """
